@@ -114,33 +114,29 @@ def predict(): ################## pseudo-code
 
 app.route('/test/',methods=['POST'])
 def test_predict(): ################## pseudo-code
-    # get image URL
-    # data = request.get_json() ################################### some string 'imgurl=http://...file.jpg'
-    # print(data) ################################################ for debugging
-    # img_url = json.load(data)['imgurl']
     img_url = 'test_image.jpg'
 
     # get image and convert
-    img_obj = png2rgb(img_url)
+    img_obj = cv2.imread(img_url, cv2.COLOR_BGR2RGB) # random
 
     # predict
     predictions = predict_one(img_obj, model)
 
-    pass
+    return predictions
 
 if __name__ == '__main__':
     print('Main')
     print('Model is loaded', type(model))
-    # app.run(debug=True, host='0.0.0.0')
-    img_url = 'test_image.jpg'
-
-    # get image and convert
-    # img_obj = url2rgb(img_url)
-
-    img_obj = cv2.imread(img_url, cv2.COLOR_BGR2RGB) # random
-    # predict
-    predictions = predict_one(img_obj, model)
-    for pred in predictions:
-        print(pred)
+    app.run(debug=True, host='0.0.0.0')
+    # img_url = 'test_image.jpg'
+    #
+    # # get image and convert
+    # # img_obj = url2rgb(img_url)
+    #
+    # img_obj = cv2.imread(img_url, cv2.COLOR_BGR2RGB) # random
+    # # predict
+    # predictions = predict_one(img_obj, model)
+    # for pred in predictions:
+    #     print(pred)
 
 
