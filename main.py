@@ -112,7 +112,7 @@ def home():
 #
 #     pass
 
-app.route('/test/',methods=['POST'])
+@app.route('/test/',methods=['POST'])
 def test_predict(): ################## pseudo-code
     img_url = 'test_image.jpg'
 
