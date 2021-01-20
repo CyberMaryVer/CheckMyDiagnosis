@@ -127,7 +127,7 @@ def test_predict(): ################## pseudo-code
 if __name__ == '__main__':
     print('Main')
     print('Model is loaded', type(model))
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=int(port))
     # img_url = 'test_image.jpg'
     #
     # # get image and convert
