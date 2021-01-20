@@ -97,20 +97,20 @@ r = "test_image.jpg"
 def home():
     return render_template('index.html')
 
-@app.route('/predict/',methods=['POST'])
-def predict(): ################## pseudo-code
-    # get image URL
-    data = request.get_json() ################################### some string 'imgurl=http://...file.jpg'
-    print(data) ################################################ for debugging
-    img_url = json.load(data)['imgurl']
-
-    # get image and convert
-    img_obj = png2rgb(img_url)
-
-    # predict
-    predictions = predict_one(img_obj, model)
-
-    pass
+# @app.route('/predict/',methods=['POST'])
+# def predict(): ################## pseudo-code
+#     # get image URL
+#     data = request.get_json() ################################### some string 'imgurl=http://...file.jpg'
+#     print(data) ################################################ for debugging
+#     img_url = json.load(data)['imgurl']
+#
+#     # get image and convert
+#     img_obj = png2rgb(img_url)
+#
+#     # predict
+#     predictions = predict_one(img_obj, model)
+#
+#     pass
 
 app.route('/test/',methods=['POST'])
 def test_predict(): ################## pseudo-code
