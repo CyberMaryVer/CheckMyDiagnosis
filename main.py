@@ -2,12 +2,10 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.metrics import categorical_accuracy, top_k_categorical_accuracy
 from tensorflow.keras.applications.mobilenet import preprocess_input
 from flask import Flask, request, redirect, url_for, flash, jsonify, render_template
-# from skimage import io
+from skimage import io
 import matplotlib.pyplot as plt
-# import pandas as pd
 import numpy as np
 # import tensorflow as tf
-import json
 import cv2
 import os
 
@@ -89,14 +87,42 @@ def predict_one(img, model, print_all=False, plot_img=False):
 
 
 app = Flask(__name__)
-# load_path = 'skin_model.h5'
+load_path = 'skin_model.h5'
 # global model
-# model = load_model(load_path, custom_objects={"top_2_accuracy": top_2_accuracy, "top_3_accuracy": top_3_accuracy})
+model = load_model(load_path, custom_objects={"top_2_accuracy": top_2_accuracy, "top_3_accuracy": top_3_accuracy})
 r = "test_image.jpg"
 
 @app.route('/')
 def home():
     return '<h1>working...</h1>'
+
+@app.route('/test/', methods=['GET'])
+def respond():
+    # Retrieve the name from url parameter
+    name = request.args.get("name", None)
+
+    # For debugging
+    print(f"Image url {name}")
+
+    response = {}
+
+    # Check if user sent an url
+    if not name:
+        response["ERROR"] = "no url found"
+    # Valid url
+    else:
+        try:
+            image_np = io.imread(name)
+            img_inp = png2rgb(image_np)
+            predictions = predict_one(img_inp, model)
+            response.update({"Predicted type": predictions[0], "Predicted risk": predictions[1],
+                             "Probabilities": predictions[2]})
+        except Exception as ex:
+            response["MESSAGE"] = f"Url {name}, {type(name)} is invalid"
+            print(ex)
+
+    # Return the response in json format
+    return jsonify(response)
 
 # @app.route('/predict/',methods=['POST'])
 # def predict(): ################## pseudo-code
@@ -110,20 +136,7 @@ def home():
 #
 #     # predict
 #     predictions = predict_one(img_obj, model)
-#
-#     pass
 
-@app.route('/test/',methods=['POST'])
-def test_predict(): ################## pseudo-code
-    img_url = 'test_image.jpg'
-
-    # get image and convert
-    img_obj = cv2.imread(img_url, cv2.COLOR_BGR2RGB) # random
-
-    # predict
-    predictions = 8 #predict_one(img_obj, model)
-
-    return predictions
 
 if __name__ == '__main__':
     # print('Main')
