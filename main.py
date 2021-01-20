@@ -95,7 +95,7 @@ r = "test_image.jpg"
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return '<h1>working...</h1>'
 
 # @app.route('/predict/',methods=['POST'])
 # def predict(): ################## pseudo-code
