@@ -1,4 +1,4 @@
-# from tensorflow.keras.models import load_model
+from tensorflow.keras.models import load_model
 from tensorflow.keras.metrics import categorical_accuracy, top_k_categorical_accuracy
 from tensorflow.keras.applications.mobilenet import preprocess_input
 from flask import Flask, request, redirect, url_for, flash, jsonify, render_template
@@ -15,7 +15,7 @@ def home():
     return render_template('index.html')
 
 @app.route('/predict/',methods=['POST'])
-def predict_one(img, model=model, print_all=False, plot_img=False):
+def predict_one(img, model, print_all=False, plot_img=False):
     resized = cv2.resize(img, (224, 224), interpolation=cv2.INTER_AREA)
     preprocessed = preprocess_input(resized)
     input_img = preprocessed.reshape(1, 224, 224, 3)
@@ -66,6 +66,8 @@ def top_2_accuracy(y_true, y_pred):
 if __name__ == '__main__':
     print('Main')
     load_path = 'skin_model.h5'
-    model = tf.load_model(load_path, custom_objects={"top_2_accuracy": top_2_accuracy, "top_3_accuracy": top_3_accuracy})
-
+    model = load_model(load_path, custom_objects={"top_2_accuracy": top_2_accuracy, "top_3_accuracy": top_3_accuracy})
+    print('Model is loaded', type(model))
+    url = 'kl;k;lk.'
+    img = request.get(url)
 
