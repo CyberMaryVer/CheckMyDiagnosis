@@ -89,9 +89,9 @@ def predict_one(img, model, print_all=False, plot_img=False):
 
 
 app = Flask(__name__)
-load_path = 'skin_model.h5'
+# load_path = 'skin_model.h5'
 # global model
-model = load_model(load_path, custom_objects={"top_2_accuracy": top_2_accuracy, "top_3_accuracy": top_3_accuracy})
+# model = load_model(load_path, custom_objects={"top_2_accuracy": top_2_accuracy, "top_3_accuracy": top_3_accuracy})
 r = "test_image.jpg"
 
 @app.route('/')
@@ -121,7 +121,7 @@ def test_predict(): ################## pseudo-code
     img_obj = cv2.imread(img_url, cv2.COLOR_BGR2RGB) # random
 
     # predict
-    predictions = predict_one(img_obj, model)
+    predictions = 8 #predict_one(img_obj, model)
 
     return predictions
 
