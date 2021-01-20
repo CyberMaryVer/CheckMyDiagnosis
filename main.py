@@ -2,7 +2,7 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.metrics import categorical_accuracy, top_k_categorical_accuracy
 from tensorflow.keras.applications.mobilenet import preprocess_input
 from flask import Flask, request, redirect, url_for, flash, jsonify, render_template
-from skimage import io
+# from skimage import io
 import matplotlib.pyplot as plt
 # import pandas as pd
 import numpy as np
@@ -17,18 +17,18 @@ def top_3_accuracy(y_true, y_pred):
 def top_2_accuracy(y_true, y_pred):
     return top_k_categorical_accuracy(y_true, y_pred, k=2)
 
-def url2rgb(url, background=(255,255,255) ):
+def png2rgb(png, background=(255,255,255) ):
     """Image converting in case if we get a link"""
-    image_np = io.imread(url)
+    image_np = png
     row, col, ch = image_np.shape
 
     if ch == 3:
-        return url
+        return image_np
 
     assert ch == 4, 'RGBA image has 4 channels.'
 
     rgb = np.zeros( (row, col, 3), dtype='float32' )
-    r, g, b, a = url[:,:,0], url[:,:,1], url[:,:,2], url[:,:,3]
+    r, g, b, a = image_np[:,:,0], image_np[:,:,1], image_np[:,:,2], image_np[:,:,3]
 
     a = np.asarray( a, dtype='float32' ) / 255.0
 
@@ -105,7 +105,7 @@ def predict(): ################## pseudo-code
     img_url = json.load(data)['imgurl']
 
     # get image and convert
-    img_obj = url2rgb(img_url)
+    img_obj = png2rgb(img_url)
 
     # predict
     predictions = predict_one(img_obj, model)
@@ -121,7 +121,7 @@ def test_predict(): ################## pseudo-code
     img_url = 'test_image.jpg'
 
     # get image and convert
-    img_obj = url2rgb(img_url)
+    img_obj = png2rgb(img_url)
 
     # predict
     predictions = predict_one(img_obj, model)
