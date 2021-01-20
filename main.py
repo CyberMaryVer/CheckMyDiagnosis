@@ -23,12 +23,12 @@ def url2rgb(url, background=(255,255,255) ):
     row, col, ch = image_np.shape
 
     if ch == 3:
-        return rgba
+        return url
 
     assert ch == 4, 'RGBA image has 4 channels.'
 
     rgb = np.zeros( (row, col, 3), dtype='float32' )
-    r, g, b, a = rgba[:,:,0], rgba[:,:,1], rgba[:,:,2], rgba[:,:,3]
+    r, g, b, a = url[:,:,0], url[:,:,1], url[:,:,2], url[:,:,3]
 
     a = np.asarray( a, dtype='float32' ) / 255.0
 
@@ -131,6 +131,16 @@ def test_predict(): ################## pseudo-code
 if __name__ == '__main__':
     print('Main')
     print('Model is loaded', type(model))
-    app.run(host='0.0.0.0')
+    # app.run(debug=True, host='0.0.0.0')
+    img_url = 'test_image.jpg'
+
+    # get image and convert
+    # img_obj = url2rgb(img_url)
+
+    img_obj = cv2.imread(img_url, cv2.COLOR_BGR2RGB) # random
+    # predict
+    predictions = predict_one(img_obj, model)
+    for pred in predictions:
+        print(pred)
 
 
