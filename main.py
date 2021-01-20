@@ -112,22 +112,22 @@ def home():
 #
 #     pass
 
-# @app.route('/test/',methods=['POST'])
-# def test_predict(): ################## pseudo-code
-#     img_url = 'test_image.jpg'
-#
-#     # get image and convert
-#     img_obj = cv2.imread(img_url, cv2.COLOR_BGR2RGB) # random
-#
-#     # predict
-#     predictions = predict_one(img_obj, model)
-#
-#     return predictions
+@app.route('/test/',methods=['POST'])
+def test_predict(): ################## pseudo-code
+    img_url = 'test_image.jpg'
+
+    # get image and convert
+    img_obj = cv2.imread(img_url, cv2.COLOR_BGR2RGB) # random
+
+    # predict
+    predictions = predict_one(img_obj, model)
+
+    return predictions
 
 if __name__ == '__main__':
     print('Main')
     print('Model is loaded', type(model))
-    app.run(debug=True, host='0.0.0.0')
+    app.run(host='0.0.0.0')
     # img_url = 'test_image.jpg'
     #
     # # get image and convert
