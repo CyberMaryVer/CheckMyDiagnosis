@@ -68,6 +68,5 @@ if __name__ == '__main__':
     load_path = 'skin_model.h5'
     model = load_model(load_path, custom_objects={"top_2_accuracy": top_2_accuracy, "top_3_accuracy": top_3_accuracy})
     print('Model is loaded', type(model))
-    url = 'kl;k;lk.'
-    img = request.get(url)
+
 
