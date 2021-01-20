@@ -4,7 +4,7 @@ from tensorflow.keras.applications.mobilenet import preprocess_input
 from flask import Flask, request, redirect, url_for, flash, jsonify, render_template
 from skimage import io
 import matplotlib.pyplot as plt
-import pandas as pd
+# import pandas as pd
 import numpy as np
 # import tensorflow as tf
 import json
@@ -40,7 +40,7 @@ def url2rgb(url, background=(255,255,255) ):
 
     return np.asarray(rgb, dtype='uint8')
 
-def predict_one(img, model=model, print_all=False, plot_img=False):
+def predict_one(img, model, print_all=False, plot_img=False):
     resized = cv2.resize(img, (224, 224), interpolation=cv2.INTER_AREA)
     preprocessed = preprocess_input(resized)
     input_img = preprocessed.reshape(1, 224, 224, 3)
@@ -55,9 +55,14 @@ def predict_one(img, model=model, print_all=False, plot_img=False):
         6: 'vasc'  # vascular lesions (angiomas, angiokeratomas, pyogenic granulomas and hemorrhages, vasc)
     }
     pred_class = model.predict(input_img)
-    pred_prob = (pred_class).argsort().ravel()[::-1]
+    # pred_prob = (pred_class).argsort().ravel()[::-1]
     pred_name_class = class_names[pred_class.argmax()].upper()
     pred_R = 100 - (100 * pred_class[:, 5][0])
+
+    # create dictionary
+    res = dict()
+    for i, pr in enumerate(pred_class[0]):
+        res.update({class_names[i].upper(): f'{100 * pr:.8f}%'})
 
     # print in red if the risk of melanoma is high
     if pred_R > 5:
@@ -79,12 +84,12 @@ def predict_one(img, model=model, print_all=False, plot_img=False):
         plt.title('Mole')
         plt.show()
 
-    return (pred_name_class, pred_class, pred_R)
+    return (pred_name_class, pred_R, res)
 
 
 app = Flask(__name__)
 load_path = 'skin_model.h5'
-global model
+# global model
 model = load_model(load_path, custom_objects={"top_2_accuracy": top_2_accuracy, "top_3_accuracy": top_3_accuracy})
 r = "test_image.jpg"
 
@@ -94,10 +99,31 @@ def home():
 
 @app.route('/predict/',methods=['POST'])
 def predict(): ################## pseudo-code
-    data = request.get_json() ###################################
-    print(data) ################################################
+    # get image URL
+    data = request.get_json() ################################### some string 'imgurl=http://...file.jpg'
+    print(data) ################################################ for debugging
     img_url = json.load(data)['imgurl']
+
+    # get image and convert
     img_obj = url2rgb(img_url)
+
+    # predict
+    predictions = predict_one(img_obj, model)
+
+    pass
+
+app.route('/test/',methods=['POST'])
+def test_predict(): ################## pseudo-code
+    # get image URL
+    # data = request.get_json() ################################### some string 'imgurl=http://...file.jpg'
+    # print(data) ################################################ for debugging
+    # img_url = json.load(data)['imgurl']
+    img_url = 'test_image.jpg'
+
+    # get image and convert
+    img_obj = url2rgb(img_url)
+
+    # predict
     predictions = predict_one(img_obj, model)
 
     pass
@@ -105,6 +131,6 @@ def predict(): ################## pseudo-code
 if __name__ == '__main__':
     print('Main')
     print('Model is loaded', type(model))
-    app.run(debug=True, host='0.0.0.0')
+    app.run(host='0.0.0.0')
 
 
