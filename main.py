@@ -9,6 +9,7 @@ import numpy as np
 # import tensorflow as tf
 import json
 import cv2
+import os
 
 # returns a compiled model
 def top_3_accuracy(y_true, y_pred):
@@ -125,9 +126,16 @@ def test_predict(): ################## pseudo-code
     return predictions
 
 if __name__ == '__main__':
-    print('Main')
-    print('Model is loaded', type(model))
-    app.run(host='0.0.0.0', port=int(port))
+    # print('Main')
+    # print('Model is loaded', type(model))
+    port = os.environ.get('PORT')
+    if port:
+        # 'PORT' variable exists - running on Heroku, listen on external IP and on given by Heroku port
+        app.run(host='0.0.0.0', port=int(port))
+    else:
+        # 'PORT' variable doesn't exist, running not on Heroku, presumabely running locally, run with default
+        #   values for Flask (listening only on localhost on default Flask port)
+        app.run()
     # img_url = 'test_image.jpg'
     #
     # # get image and convert
