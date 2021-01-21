@@ -93,7 +93,7 @@ model = load_model(load_path, custom_objects={"top_2_accuracy": top_2_accuracy, 
 r = "test_image.jpg"
 
 @app.route('/')
-def home():
+def index():
     return '<h1>working...</h1>'
 
 @app.route('/test/', methods=['GET'])
@@ -124,33 +124,11 @@ def respond():
     # Return the response in json format
     return jsonify(response)
 
-# @app.route('/predict/',methods=['POST'])
-# def predict(): ################## pseudo-code
-#     # get image URL
-#     data = request.get_json() ################################### some string 'imgurl=http://...file.jpg'
-#     print(data) ################################################ for debugging
-#     img_url = json.load(data)['imgurl']
-#
-#     # get image and convert
-#     img_obj = png2rgb(img_url)
-#
-#     # predict
-#     predictions = predict_one(img_obj, model)
-
-
 if __name__ == '__main__':
-    # print('Main')
-    # print('Model is loaded', type(model))
-    port = os.environ.get('PORT')
-    if port:
-        # 'PORT' variable exists - running on Heroku, listen on external IP and on given by Heroku port
-        app.run(host='0.0.0.0', port=int(port))
-    else:
-        # 'PORT' variable doesn't exist, running not on Heroku, presumabely running locally, run with default
-        #   values for Flask (listening only on localhost on default Flask port)
-        app.run()
+    app.run(threaded=True, port=5000)
+
+    # # >>>>> debugging part: <<<<<
     # img_url = 'test_image.jpg'
-    #
     # # get image and convert
     # # img_obj = url2rgb(img_url)
     #
