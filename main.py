@@ -20,16 +20,16 @@ KEY = 'skin_model.h5' # object key
 # s3 = boto3.resource('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
 
 # for heroku
-s3 = boto3.resource('s3')
-
-try:
-    print("The model is loading...")
-    s3.Bucket(BUCKET_NAME).download_file(KEY, 'skin_model.h5')
-except botocore.exceptions.ClientError as e:
-    if e.response['Error']['Code'] == "404":
-        print("The object does not exist.")
-    else:
-        raise
+# s3 = boto3.resource('s3')
+#
+# try:
+#     print("The model is loading...")
+#     s3.Bucket(BUCKET_NAME).download_file(KEY, 'skin_model.h5')
+# except botocore.exceptions.ClientError as e:
+#     if e.response['Error']['Code'] == "404":
+#         print("The object does not exist.")
+#     else:
+#         raise
 
 # returns a compiled model
 def top_3_accuracy(y_true, y_pred):
