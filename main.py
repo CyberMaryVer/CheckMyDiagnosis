@@ -15,10 +15,15 @@ import botocore
 BUCKET_NAME = 'cmd-app' # bucket name
 KEY = 'skin_model.h5' # object key
 
+# for local host
+# from amazon import *
+# s3 = boto3.resource('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
+
 # for heroku
 s3 = boto3.resource('s3')
 
 try:
+    print("The model is loading...")
     s3.Bucket(BUCKET_NAME).download_file(KEY, 'skin_model.h5')
 except botocore.exceptions.ClientError as e:
     if e.response['Error']['Code'] == "404":
@@ -104,6 +109,8 @@ def predict_one(img, model, print_all=False, plot_img=False):
 
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'static/uploads/'
+
 load_path = 'skin_model.h5'
 # global model
 model = load_model(load_path, custom_objects={"top_2_accuracy": top_2_accuracy, "top_3_accuracy": top_3_accuracy})
@@ -111,7 +118,8 @@ r = "test_image.jpg"
 
 @app.route('/')
 def home():
-    return '<h1>working...</h1>'
+    flash('use: /test/name=[your url]')
+    return render_template('index.html')
 
 @app.route('/test/', methods=['GET'])
 def respond():
@@ -129,7 +137,8 @@ def respond():
     # Valid url
     else:
         try:
-            testpath = name
+            testpath = 'static/images/mole.jpg'
+            print(name)
             urlretrieve(name, testpath)
             img_inp = cv2.imread(testpath, cv2.IMREAD_UNCHANGED)
             # image_np = io.imread(name)
