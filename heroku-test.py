@@ -8,7 +8,6 @@ import numpy as np
 # import tensorflow as tf
 import cv2
 import os
-from tensorflow.python.keras.layers import LSTM, TimeDistributed, Dense
 
 # returns a compiled model
 def top_3_accuracy(y_true, y_pred):
