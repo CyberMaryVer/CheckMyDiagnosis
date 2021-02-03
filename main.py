@@ -2,7 +2,8 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.metrics import categorical_accuracy, top_k_categorical_accuracy
 from tensorflow.keras.applications.mobilenet import preprocess_input
 from flask import Flask, request, flash, jsonify, render_template
-from skimage import io
+# from skimage import io
+from urllib.request import urlretrieve
 import matplotlib.pyplot as plt
 import numpy as np
 # import tensorflow as tf
@@ -128,8 +129,11 @@ def respond():
     # Valid url
     else:
         try:
-            image_np = io.imread(name)
-            img_inp = png2rgb(image_np)
+            testpath = name
+            urlretrieve(name, testpath)
+            img_inp = cv2.imread(testpath, cv2.IMREAD_UNCHANGED)
+            # image_np = io.imread(name)
+            img_inp = png2rgb(img_inp)
             predictions = predict_one(img_inp, model)
             response.update({"Predicted type": predictions[0], "Predicted risk": predictions[1],
                              "Probabilities": predictions[2]})
