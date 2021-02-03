@@ -1,13 +1,29 @@
 from tensorflow.keras.models import load_model
 from tensorflow.keras.metrics import categorical_accuracy, top_k_categorical_accuracy
 from tensorflow.keras.applications.mobilenet import preprocess_input
-from flask import Flask, request, redirect, url_for, flash, jsonify, render_template
+from flask import Flask, request, flash, jsonify, render_template
 from skimage import io
 import matplotlib.pyplot as plt
 import numpy as np
 # import tensorflow as tf
 import cv2
 import os
+import boto3
+import botocore
+
+BUCKET_NAME = 'cmd-app' # bucket name
+KEY = 'skin_model.h5' # object key
+
+# for heroku
+s3 = boto3.resource('s3')
+
+try:
+    s3.Bucket(BUCKET_NAME).download_file(KEY, 'skin_model.h5')
+except botocore.exceptions.ClientError as e:
+    if e.response['Error']['Code'] == "404":
+        print("The object does not exist.")
+    else:
+        raise
 
 # returns a compiled model
 def top_3_accuracy(y_true, y_pred):
@@ -93,7 +109,7 @@ model = load_model(load_path, custom_objects={"top_2_accuracy": top_2_accuracy, 
 r = "test_image.jpg"
 
 @app.route('/')
-def index():
+def home():
     return '<h1>working...</h1>'
 
 @app.route('/test/', methods=['GET'])
@@ -124,10 +140,19 @@ def respond():
     # Return the response in json format
     return jsonify(response)
 
-if __name__ == '__main__':
-    app.run(threaded=True, port=5000)
 
-    # # >>>>> debugging part: <<<<<
+if __name__ == '__main__':
+
+    port = os.environ.get('PORT')
+    if port:
+        # 'PORT' variable exists - running on Heroku, listen on external IP and on given by Heroku port
+        app.run(host='0.0.0.0', port=int(port))
+    else:
+        # 'PORT' variable doesn't exist, running not on Heroku, presumabely running locally, run with default
+        #   values for Flask (listening only on localhost on default Flask port)
+        app.run()
+
+    # >>>>>>>>>> DEBUG <<<<<<<<<<<<<<
     # img_url = 'test_image.jpg'
     # # get image and convert
     # # img_obj = url2rgb(img_url)

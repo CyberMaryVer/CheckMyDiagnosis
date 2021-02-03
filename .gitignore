@@ -1,2 +1,4 @@
 venv38
 test.jpeg
+heroku-test.py
+skin_model.h5
