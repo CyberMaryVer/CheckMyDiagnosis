@@ -7,8 +7,8 @@
 </head>
 <body>
 <h1>Please paste the link to the image</h1>
-<form action="{{ url_for('test') }}" method="post">
-    <input type="text" name="name">
+<form action="{{ url_for('respond')}}" method="get">
+    <input type="url" name="urlname">
     <input type="submit">
 </form>
 </body>

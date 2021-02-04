@@ -4,6 +4,7 @@ from tensorflow.keras.applications.mobilenet import preprocess_input
 from flask import Flask, request, flash, jsonify, render_template, url_for
 # from skimage import io
 from urllib.request import urlretrieve
+from urllib.parse import unquote
 import matplotlib.pyplot as plt
 import numpy as np
 # import tensorflow as tf
@@ -123,11 +124,14 @@ def home():
     # flash('use: /test/name=[your url]')
     return render_template('index.html')
 
-@app.route('/test/', methods=['GET'])
+@app.route('/test/', methods=['GET', 'POST'])
 def respond():
     # Retrieve the name from url parameter
     # name = request.args.get("name", None)
-    name = request.form.get("name")
+    name = request.args.get("urlname")
+    print(name)
+    # name = unquote(name, encoding='utf-8')
+    # print(name)
 
     # For debugging
     print(f"Image url {name}")
@@ -167,16 +171,4 @@ if __name__ == '__main__':
         # 'PORT' variable doesn't exist, running not on Heroku, presumabely running locally, run with default
         #   values for Flask (listening only on localhost on default Flask port)
         app.run()
-
-    # >>>>>>>>>> DEBUG <<<<<<<<<<<<<<
-    # img_url = 'test_image.jpg'
-    # # get image and convert
-    # # img_obj = url2rgb(img_url)
-    #
-    # img_obj = cv2.imread(img_url, cv2.COLOR_BGR2RGB) # random
-    # # predict
-    # predictions = predict_one(img_obj, model)
-    # for pred in predictions:
-    #     print(pred)
-
 
