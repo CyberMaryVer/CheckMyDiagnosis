@@ -1,7 +1,7 @@
 from tensorflow.keras.models import load_model
 from tensorflow.keras.metrics import categorical_accuracy, top_k_categorical_accuracy
 from tensorflow.keras.applications.mobilenet import preprocess_input
-from flask import Flask, request, flash, jsonify, render_template
+from flask import Flask, request, flash, jsonify, render_template, url_for
 # from skimage import io
 from urllib.request import urlretrieve
 import matplotlib.pyplot as plt
@@ -19,17 +19,19 @@ KEY = 'skin_model.h5' # object key
 # from amazon import *
 # s3 = boto3.resource('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
 
+#######################################################################
 # for heroku
-s3 = boto3.resource('s3')
-
-try:
-    print("The model is loading...")
-    s3.Bucket(BUCKET_NAME).download_file(KEY, 'skin_model.h5')
-except botocore.exceptions.ClientError as e:
-    if e.response['Error']['Code'] == "404":
-        print("The object does not exist.")
-    else:
-        raise
+# s3 = boto3.resource('s3')
+#
+# try:
+#     print("The model is loading...")
+#     s3.Bucket(BUCKET_NAME).download_file(KEY, 'skin_model.h5')
+# except botocore.exceptions.ClientError as e:
+#     if e.response['Error']['Code'] == "404":
+#         print("The object does not exist.")
+#     else:
+#         raise
+#######################################################################
 
 # returns a compiled model
 def top_3_accuracy(y_true, y_pred):
@@ -118,13 +120,14 @@ r = "test_image.jpg"
 
 @app.route('/')
 def home():
-    flash('use: /test/name=[your url]')
+    # flash('use: /test/name=[your url]')
     return render_template('index.html')
 
 @app.route('/test/', methods=['GET'])
 def respond():
     # Retrieve the name from url parameter
-    name = request.args.get("name", None)
+    # name = request.args.get("name", None)
+    name = request.form.get("name")
 
     # For debugging
     print(f"Image url {name}")

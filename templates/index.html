@@ -7,5 +7,9 @@
 </head>
 <body>
 <h1>Please paste the link to the image</h1>
+<form action="{{ url_for('test') }}" method="post">
+    <input type="text" name="name">
+    <input type="submit">
+</form>
 </body>
 </html>
