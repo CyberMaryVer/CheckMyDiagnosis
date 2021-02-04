@@ -86,7 +86,8 @@ def predict_one(img, model, print_all=False, plot_img=False):
     # create dictionary
     res = dict()
     for i, pr in enumerate(pred_class[0]):
-        res.update({class_names[i].upper(): f'{100 * pr:.8f}%'})
+        update_text = f'{100 * pr:.8f}%' # to fix bug on google app engine
+        res.update({class_names[i].upper(): update_text})
 
     # print in red if the risk of melanoma is high
     if pred_R > 5:
