@@ -16,3 +16,12 @@ It can be used by executing HTTP requests with an image url to our Web API and c
 **Output**: probabilities for each class of a mole for the input image
 
 **Accuracy**: combined accuracy for 3 malignant classes ~97%; class accuracy ~67% 
+
+## Team
+
+[![CyberMaryVer](https://avatars3.githubusercontent.com/u/66170525?s=40&v=4)](https://github.com/CyberMaryVer) | [![Clementine](https://avatars.githubusercontent.com/u/25142385?s=40&v=4)](https://github.com/ClementineSz) 
+--- | ---
+[Maria Startseva](https://github.com/CyberMaryVer) | [Clementine](https://github.com/ClementineSz)
+
+## License
+**Check My Diagnosis** is released under the [MIT License](http://www.opensource.org/licenses/MIT).
