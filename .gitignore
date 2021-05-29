@@ -1,3 +1,5 @@
+.idea
+__pycache__
 venv38
 test.jpeg
 heroku-test.py

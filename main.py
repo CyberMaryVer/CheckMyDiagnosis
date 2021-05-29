@@ -13,8 +13,9 @@ import os
 import boto3
 import botocore
 
-BUCKET_NAME = 'cmd-app' # bucket name
-KEY = 'skin_model.h5' # object key
+BUCKET_NAME = 'cmd-app'  # bucket name
+KEY = 'skin_model.h5'  # object key
+
 
 # for local host
 # from amazon import *
@@ -38,10 +39,12 @@ KEY = 'skin_model.h5' # object key
 def top_3_accuracy(y_true, y_pred):
     return top_k_categorical_accuracy(y_true, y_pred, k=3)
 
+
 def top_2_accuracy(y_true, y_pred):
     return top_k_categorical_accuracy(y_true, y_pred, k=2)
 
-def png2rgb(png, background=(255,255,255) ):
+
+def png2rgb(png, background=(255, 255, 255)):
     """Image converting in case if we get a link"""
     image_np = png
     row, col, ch = image_np.shape
@@ -51,18 +54,19 @@ def png2rgb(png, background=(255,255,255) ):
 
     assert ch == 4, 'RGBA image has 4 channels.'
 
-    rgb = np.zeros( (row, col, 3), dtype='float32' )
-    r, g, b, a = image_np[:,:,0], image_np[:,:,1], image_np[:,:,2], image_np[:,:,3]
+    rgb = np.zeros((row, col, 3), dtype='float32')
+    r, g, b, a = image_np[:, :, 0], image_np[:, :, 1], image_np[:, :, 2], image_np[:, :, 3]
 
-    a = np.asarray( a, dtype='float32' ) / 255.0
+    a = np.asarray(a, dtype='float32') / 255.0
 
     R, G, B = background
 
-    rgb[:,:,0] = r * a + (1.0 - a) * R
-    rgb[:,:,1] = g * a + (1.0 - a) * G
-    rgb[:,:,2] = b * a + (1.0 - a) * B
+    rgb[:, :, 0] = r * a + (1.0 - a) * R
+    rgb[:, :, 1] = g * a + (1.0 - a) * G
+    rgb[:, :, 2] = b * a + (1.0 - a) * B
 
     return np.asarray(rgb, dtype='uint8')
+
 
 def predict_one(img, model, print_all=False, plot_img=False):
     resized = cv2.resize(img, (224, 224), interpolation=cv2.INTER_AREA)
@@ -72,7 +76,7 @@ def predict_one(img, model, print_all=False, plot_img=False):
     class_names = {
         0: 'akiec',  # actinic keratoses and intraepithelial carcinoma/Bowen disease (akiec)
         1: 'bcc',  # basal cell carcinoma (bcc) *
-        2: 'bkl', # benign lesions of the keratosis type
+        2: 'bkl',  # benign lesions of the keratosis type
         3: 'df',  # dermatofibroma (df)
         4: 'mel',  # melanoma (mel) *
         5: 'nv',  # melanocytic nevi (nv)
@@ -86,7 +90,7 @@ def predict_one(img, model, print_all=False, plot_img=False):
     # create dictionary
     res = dict()
     for i, pr in enumerate(pred_class[0]):
-        update_text = f"{100 * pr:.8f}%" # to fix bug on google app engine
+        update_text = f"{100 * pr:.8f}%"  # to fix bug on google app engine
         res.update({class_names[i].upper(): update_text})
 
     # print in red if the risk of melanoma is high
@@ -120,10 +124,12 @@ load_path = 'skin_model.h5'
 model = load_model(load_path, custom_objects={"top_2_accuracy": top_2_accuracy, "top_3_accuracy": top_3_accuracy})
 r = "test_image.jpg"
 
+
 @app.route('/')
 def home():
     # flash('use: /test/name=[your url]')
     return render_template('index.html')
+
 
 @app.route('/test/', methods=['GET', 'POST'])
 def respond():
@@ -172,4 +178,3 @@ if __name__ == '__main__':
         # 'PORT' variable doesn't exist, running not on Heroku, presumabely running locally, run with default
         #   values for Flask (listening only on localhost on default Flask port)
         app.run()
-
